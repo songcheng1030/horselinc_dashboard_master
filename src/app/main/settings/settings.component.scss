@@ -1,0 +1,26 @@
+:host {
+    .content {
+        .settings {
+            width: 100%;
+            max-width: 800px !important;
+        }
+        .settings-errors-model {
+            flex: 1;
+            code {
+                background: none !important;
+            }
+        }
+        .submit-button {
+            width: 150px;
+            height: 50px;
+        }
+        .service-types-content {
+            width: 100%;
+            margin-top: 50px;
+        }
+        .service-types-table {
+            text-align: right;
+            display: inline;
+        }
+    }
+}

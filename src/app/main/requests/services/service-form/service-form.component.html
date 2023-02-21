@@ -1,0 +1,65 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar matDialogTitle class="mat-accent m-0">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{dialogTitle}}</span>
+            <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-32 pb-0 mt-20 m-0" fusePerfectScrollbar>
+
+        <form [formGroup]="serviceForm">
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Service</mat-label>
+                    <mat-select formControlName="service" required>
+                        <mat-select-search [formControl]="serviceFilterCtrl"></mat-select-search>
+                        <mat-option *ngFor="let service of filteredServices | async" [value]="service.service">
+                            {{service.service}}
+                        </mat-option>
+                    </mat-select>                                        
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" floatLabel="always" fxFlex>
+                    <mat-label>Quantity</mat-label>
+                    <input matInput type="number" placeholder="Quantity" name="quantity" formControlName="quantity" required>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex class="index-field">                                    
+                    <input name="index" formControlName="index" matInput>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex class="rate-field">                                    
+                    <input name="rate" formControlName="rate" matInput>
+                </mat-form-field>
+            </div>
+            
+        </form>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+
+        <button mat-raised-button class="accent" *ngIf="action === 'edit'" mat-button class="mr-8" (click)="matDialogRef.close(['delete',serviceForm])"
+            aria-label="Delete" matTooltip="Delete">
+            DELETE
+        </button>
+
+        <button mat-raised-button *ngIf="action !== 'edit'" mat-button class="accent save-button" (click)="matDialogRef.close(serviceForm)"
+            [disabled]="serviceForm.invalid" aria-label="SAVE">
+            ADD
+        </button>
+
+        <button mat-raised-button *ngIf="action === 'edit'" mat-button class="accent save-button" (click)="matDialogRef.close(['save',serviceForm])"
+            [disabled]="serviceForm.invalid" aria-label="SAVE">
+            SAVE
+        </button>
+
+    </div>
+</div>

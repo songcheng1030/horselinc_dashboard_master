@@ -1,0 +1,70 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar matDialogTitle class="mat-accent m-0">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{dialogTitle}}</span>
+            <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-32 pb-0 mt-20 m-0" fusePerfectScrollbar>
+
+        <form [formGroup]="managerProviderForm">
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Payment Approver</mat-label>
+                    <mat-select formControlName="creatorId" required>
+                        <mat-select-search [formControl]="managerProviderFilterCtrl"></mat-select-search>
+                        <mat-option *ngFor="let user of filteredManagerProviders | async" [value]="user.userId">
+                            {{user.name}}
+                        </mat-option>
+                    </mat-select>                                        
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start">                
+                <mat-form-field appearance="outline"  fxFlex>                                            
+                        <mat-label>Service Type</mat-label>
+                        <mat-select formControlName="serviceType" required>
+                            <mat-option value="farrier">Farrier</mat-option>
+                            <mat-option value="vet">Vet</mat-option>
+                            <mat-option value="hauling">Hauling</mat-option>
+                            <mat-option value="braider">Braider</mat-option>
+                            <mat-option value="clipping">Clipping</mat-option>
+                            <mat-option value="therapy">Therapy</mat-option>
+                            <mat-option value="other">Other</mat-option>
+                        </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- uid (hidden field) -->
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex class="uid-field">                    
+                    <input name="uid" formControlName="uid" matInput>
+                </mat-form-field>
+            </div>
+           
+        </form>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+
+        <button mat-raised-button class="accent" *ngIf="action === 'edit'" mat-button class="mr-8" (click)="matDialogRef.close(['delete',managerProviderForm])"
+            aria-label="Delete" matTooltip="Delete">
+            DELETE
+        </button>
+
+        <button mat-raised-button *ngIf="action !== 'edit'" mat-button class="accent save-button" (click)="matDialogRef.close(managerProviderForm)"
+            [disabled]="managerProviderForm.invalid" aria-label="SAVE">
+            ADD
+        </button>
+
+        <button mat-raised-button *ngIf="action === 'edit'" mat-button class="accent save-button" (click)="matDialogRef.close(['save',managerProviderForm])"
+            [disabled]="managerProviderForm.invalid" aria-label="SAVE">
+            SAVE
+        </button>
+
+    </div>
+</div>

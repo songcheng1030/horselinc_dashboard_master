@@ -1,0 +1,248 @@
+<div id="horse" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" (click)="returnPreviousPage()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <div fxLayout="column" fxLayoutAlign="start start" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h1" *ngIf="pageType ==='edit'">
+                        Horse Detail ( {{horse.displayName}} )
+                    </div>
+                    <div class="h1" *ngIf="pageType ==='new'">
+                        New Horse
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card mb-32 pb-32" fusePerfectScrollbar>
+
+            <!-- CONTENT -->
+            <div class="content p-24">
+                <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="m-0 mr-16 secondary-text">ballot</mat-icon>
+                    <div class="h2 secondary-text">Horse Detail</div>
+                </div>
+                <!-- Horse Detail -->
+                <div class="horse-detail">
+                    <form name="horseForm" [formGroup]="horseForm" class="horse w-100-p" fxLayout="column" fxFlex>
+                        <div class="tab-content p-24" fusePerfectScrollbar fxLayout="column">
+                            
+                            <!-- Barn Name and Display Name -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Barn Name</mat-label>
+                                    <input matInput placeholder="Barn Name" name="barnName" formControlName="barnName" required>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Display Name</mat-label>
+                                    <input matInput placeholder="Barn Name" name="displayName" formControlName="displayName" required>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Gender and Birth Year -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">                                
+                                <mat-form-field appearance="outline" fxFlex="48">                                            
+                                    <mat-label>Gender</mat-label>
+                                    <mat-select formControlName="gender" required>
+                                        <mat-option value="Mare">Mare</mat-option>
+                                        <mat-option value="Stallion">Stallion</mat-option>
+                                        <mat-option value="Gelding">Gelding</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Birth Year</mat-label>
+                                    <input matInput type="number" placeholder="Birth Year" name="birthYear" formControlName="birthYear">
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Color and Height -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Color</mat-label>
+                                    <input matInput placeholder="Color" name="color" formControlName="color">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Height</mat-label>
+                                    <input type="number" matInput placeholder="Height" name="height" formControlName="height">                                        
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Sire and Dam -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Sire</mat-label>
+                                    <input matInput placeholder="Sire" name="sire" formControlName="sire">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Dam</mat-label>
+                                    <input matInput placeholder="Dam" name="dam" formControlName="dam">                                        
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Description and IsDeleted-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="76">
+                                    <mat-label>Description</mat-label>
+                                    <input matInput placeholder="Description" name="description" formControlName="description">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" fxFlex="20">                                            
+                                    <mat-label>Status</mat-label>
+                                    <mat-select formControlName="isDeleted" required>
+                                        <mat-option value="false">Activate</mat-option>
+                                        <mat-option value="true">Deleted</mat-option>                                            
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Private Note -->
+                            <div fxLayout="row">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="100">                                    
+                                    <mat-label>Private Note</mat-label>                        
+                                    <textarea name="privateNote" formControlName="privateNote" placeholder="Private Note" matInput type="text" max-rows="2"></textarea>                                    
+                                </mat-form-field>
+                            </div>
+
+                            <!-- LeaserId and TrainerId-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>Leased to</mat-label>
+                                    <mat-select formControlName="leaserId">
+                                        <mat-select-search [formControl]="leaserFilterCtrl"></mat-select-search>
+                                        <mat-option *ngFor="let user of filteredLeasers | async" [value]="user.userId">
+                                            {{user.name}}
+                                        </mat-option>
+                                    </mat-select>                    
+                                    <mat-error>Leaser is required!</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>Trainer</mat-label>
+                                    <mat-select formControlName="trainerId" required>
+                                        <mat-select-search [formControl]="trainerFilterCtrl"></mat-select-search>
+                                        <mat-option *ngFor="let user of filteredTrainers | async" [value]="user.userId">
+                                            {{user.name}}
+                                        </mat-option>
+                                    </mat-select>                    
+                                    <mat-error>Trainer is required!</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- CreatorId and CreatedAt-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>Creator</mat-label>
+                                    <mat-select formControlName="creatorId" required>
+                                        <mat-select-search [formControl]="creatorFilterCtrl"></mat-select-search>
+                                        <mat-option *ngFor="let user of filteredCreators | async" [value]="user.userId">
+                                            {{user.name}}
+                                        </mat-option>
+                                    </mat-select>                    
+                                    <mat-error>Creator is required!</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>CreatedAt</mat-label>                                    
+                                    <input name="createdAt" formControlName="createdAt" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Avatar -->
+                            <div fxLayout="row" fxLayoutAlign="left">                               
+                                <span>Avatar:</span>
+                                <input type="file" (change)="fileChangeEvent($event)" />
+                                <button mat-flat-button color="accent" *ngIf="croppedImage && !uploadPercentOb" (click)="uploadAvatar()">Upload Avatar</button>
+                            </div>
+                            <!-- Uploaded Avatar -->
+                            <div>
+                                <mat-progress-bar class="upload-progress" mode="determinate" *ngIf="croppedImage" value="{{uploadPercentOb | async}}"></mat-progress-bar>
+                                <img class="avatar-img" src="{{uploadedUrlOb | async}}"/>
+                                <!-- <mat-form-field appearance="outline" fxFlex="48">
+                                    <input name="uploadedUrl" formControlName="uploadedUrl" [value]="uploadedUrlOb | async" matInput readonly>
+                                </mat-form-field> -->
+                            </div>
+                            <!-- Avatar preview -->
+                            <div fxLayout="row" fxLayoutAlign="left">
+                                <img class="avatar-img" *ngIf="!croppedImage" src="{{horse.avatarUrl}}"/>
+                                <image-cropper
+                                    *ngIf="!uploadPercentOb"
+                                    class="avatar-cropper"
+                                    [imageChangedEvent]="imageChangedEvent"
+                                    [maintainAspectRatio]="true"
+                                    [aspectRatio]="1 / 1"
+                                    [resizeToWidth]="300"
+                                    format="jpeg"
+                                    (imageCropped)="imageCropped($event)"
+                                    (imageLoaded)="imageLoaded()"
+                                    (cropperReady)="cropperReady()"
+                                    (loadImageFailed)="loadImageFailed()"
+                                    >
+                                </image-cropper>
+                            </div>
+                            <!-- <img [src]="croppedImage" /> -->
+
+                            <!-- Control button -->
+                            <div fxLayout="row" fxLayoutAlign="end">
+                                <button mat-stroked-button class="save-horse-button mr-16"  color="warn"
+                                    *ngIf="pageType==='edit'" (click)="deleteHorse()">
+                                    <span>Delete Horse</span>
+                                </button>
+                                <button mat-raised-button class="save-horse-button"  color="accent" [disabled]="horseForm.invalid"
+                                        *ngIf="pageType==='edit'" (click)="saveHorse()">
+                                        <span>Save Horse</span>
+                                </button>
+                                
+                                <button mat-raised-button class="save-horse-button"  color="accent" [disabled]="horseForm.invalid" *ngIf="pageType ==='new'"
+                                        (click)="addHorse()">
+                                        <span>Add Horse</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+                <!-- / Horse Detail -->
+
+                <!-- Registrations -->
+                <div class="registrations-content" fxLayout="row" fxLayoutAlign="center center" *ngIf="pageType ==='edit'">
+                    <registrations class="registrations-table"></registrations>
+                </div>
+                <!-- / Registrations -->
+
+                <!-- Owner -->
+                <div class="owners-content" fxLayout="row" fxLayoutAlign="center center" *ngIf="pageType ==='edit'">
+                    <owners class="owners-table"></owners>
+                </div>
+                <!-- / Owner -->
+                
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

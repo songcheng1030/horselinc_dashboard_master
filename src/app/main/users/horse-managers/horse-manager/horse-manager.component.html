@@ -1,0 +1,203 @@
+<div id="horse-manager" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" (click)="returnPreviousPage()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <div fxLayout="column" fxLayoutAlign="start start" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h1" *ngIf="pageType ==='edit'">
+                        Horse Manager Detail ( {{user.horseManager.name}} )
+                    </div>
+                    <div class="h1" *ngIf="pageType ==='new'">
+                        New Horse Manager
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card mb-32 pb-32" fusePerfectScrollbar>
+
+            <!-- CONTENT -->
+            <div class="content p-24">
+                <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="m-0 mr-16 secondary-text">ballot</mat-icon>
+                    <div class="h2 secondary-text">Horse Manager Detail</div>
+                </div>
+                <!-- HorseManager Detail -->
+                <div class="horse-manager-detail">
+                    <form name="userForm" [formGroup]="userForm" class="horse w-100-p" fxLayout="column" fxFlex>
+                        <div class="tab-content p-24" fusePerfectScrollbar fxLayout="column">
+                            
+                            <!-- Name and Email -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Name</mat-label>
+                                    <input matInput placeholder="Name" name="name" formControlName="name" required>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Email</mat-label>
+                                    <input matInput placeholder="Email" name="email" formControlName="email" required>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Barn Name and Phone -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Barn Name</mat-label>
+                                    <input matInput placeholder="Barn Name" name="barnName" formControlName="barnName" required>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Phone</mat-label>
+                                    <input matInput placeholder="Phone" name="phone" formControlName="phone" required>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Platform and Status -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">                                
+                                <mat-form-field appearance="outline" fxFlex="48">                                            
+                                    <mat-label>Platform</mat-label>
+                                    <mat-select formControlName="platform" required>
+                                        <mat-option value="iOS">iOS</mat-option>
+                                        <mat-option value="Android">Android</mat-option>
+                                        <mat-option value="Web">Web</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="48">                                            
+                                    <mat-label>Status</mat-label>
+                                    <mat-select formControlName="status" required>
+                                        <mat-option value="online">Online</mat-option>
+                                        <mat-option value="offline">Offline</mat-option>
+                                        <mat-option value="away">Away</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Location -->
+                            <div fxLayout="row">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="100">
+                                    <mat-label>Location</mat-label>
+                                    <input matInput placeholder="Location" name="location" formControlName="location">
+                                </mat-form-field>
+                            </div>
+                            <!-- Token -->
+                            <div fxLayout="row">
+                                <mat-form-field appearance="outline" floatLabel="always"  fxFlex="100">
+                                    <mat-label>Token</mat-label>
+                                    <input matInput placeholder="Token" name="token" formControlName="token" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Type and CreatedAt-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" fxFlex="48">                                            
+                                    <mat-label>Type</mat-label>
+                                    <mat-select formControlName="type" required>
+                                        <mat-option value="Horse Manager">Horse Manager</mat-option>
+                                        <!-- <mat-option value="Service Provider">Service Provider</mat-option> -->
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>CreatedAt</mat-label>                                    
+                                    <input name="createdAt" formControlName="createdAt" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Avatar -->
+                            <div fxLayout="row" fxLayoutAlign="left">                               
+                                <span>Avatar:</span>
+                                <input type="file" (change)="fileChangeEvent($event)" />
+                                <button mat-flat-button color="accent" *ngIf="croppedImage && !uploadPercentOb" (click)="uploadAvatar()">Upload Avatar</button>
+                            </div>
+                            <!-- Uploaded Avatar -->
+                            <div>
+                                <mat-progress-bar class="upload-progress" mode="determinate" *ngIf="croppedImage" value="{{uploadPercentOb | async}}"></mat-progress-bar>
+                                <img class="avatar-img" src="{{uploadedUrlOb | async}}"/>
+                                <!-- <mat-form-field appearance="outline" fxFlex="48">
+                                    <input name="uploadedUrl" formControlName="uploadedUrl" [value]="uploadedUrlOb | async" matInput readonly>
+                                </mat-form-field> -->
+                            </div>
+                            <!-- Avatar preview -->
+                            <div fxLayout="row" fxLayoutAlign="left">
+                                <img class="avatar-img" *ngIf="!croppedImage" src="{{user.horseManager.avatarUrl}}"/>
+                                <image-cropper
+                                    *ngIf="!uploadPercentOb"
+                                    class="avatar-cropper"
+                                    [imageChangedEvent]="imageChangedEvent"
+                                    [maintainAspectRatio]="true"
+                                    [aspectRatio]="1 / 1"
+                                    [resizeToWidth]="300"
+                                    format="jpeg"
+                                    (imageCropped)="imageCropped($event)"
+                                    (imageLoaded)="imageLoaded()"
+                                    (cropperReady)="cropperReady()"
+                                    (loadImageFailed)="loadImageFailed()"
+                                    >
+                                </image-cropper>
+                            </div>
+                            <!-- <img [src]="croppedImage" /> -->
+
+                            <!-- Control button -->
+                            <div fxLayout="row" fxLayoutAlign="end">
+                                <button mat-stroked-button class="save-horse-button mr-16"  color="warn"
+                                    *ngIf="pageType==='edit'" (click)="deleteHorseManager()">
+                                    <span>Delete Horse Manager</span>
+                                </button>
+                                <button mat-raised-button class="save-horse-button"  color="accent" [disabled]="userForm.invalid"
+                                        *ngIf="pageType==='edit'" (click)="saveHorseManager()">
+                                        <span>Save Horse Manager</span>
+                                </button>
+                                
+                                <button mat-raised-button class="save-horse-button"  color="accent" [disabled]="userForm.invalid" *ngIf="pageType ==='new'"
+                                        (click)="addHorseManager()">
+                                        <span>Add Horse Manager</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+                <!-- / HorseManager Detail -->
+
+                <!-- PaymentApprover -->
+                <div class="payment-approvers-content" fxLayout="row" fxLayoutAlign="center center" *ngIf="pageType ==='edit'">
+                    <payment-approvers class="payment-approvers-table"></payment-approvers>
+                </div>
+                <!-- / PaymentApprover -->
+
+                <!-- Service Manager Provider -->
+                <div class="manager-providers-content" fxLayout="row" fxLayoutAlign="center center" *ngIf="pageType ==='edit'">
+                    <manager-providers class="manager-providers-table"></manager-providers>
+                </div>
+                <!-- / Service Manager Provider -->
+                
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

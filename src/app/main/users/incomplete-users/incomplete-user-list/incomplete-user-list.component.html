@@ -1,0 +1,151 @@
+<div id="incomplete-user-list" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent"
+             fxLayout="column" fxLayoutAlign="center center"
+             fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0"
+                 fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    person
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    Incomplete Users
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="Search for a user">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            <!-- BUTTONS -->
+            <div class="mx-32 mx-md-0">
+                <!-- ADD BUTTON -->
+                <button mat-raised-button
+                        [routerLink]="'/users/incomplete-users/new'"
+                        class="add-user-button fuse-white mt-24 mt-md-0 mr-16">
+                        <mat-icon class="logo-icon s-24 mr-8" [@animate]="{value:'*',params:{delay:'200ms',scale:'0.2'}}">
+                            add_circle_outline
+                        </mat-icon>
+                        <span>Create</span>
+                </button>                
+                <!-- Export CSV BUTTON -->
+                <button mat-raised-button
+                        (click)="exportCSV()"
+                        class="add-user-button fuse-white mt-24 mt-md-0">
+                        <mat-icon class="logo-icon s-24 mr-8" [@animate]="{value:'*',params:{delay:'200ms',scale:'0.2'}}">
+                            cloud_download
+                        </mat-icon>
+                        <span>Export CSV</span>
+                </button>                
+            </div>
+            <!-- / BUTTONS -->
+            
+
+        </div>
+        <!-- / HEADER -->
+        <!-- SELECTED BAR -->
+        <selected-bar class="accent-600" *ngIf="hasSelectedIncompleteUserList" [@slideInTop]></selected-bar>
+        <!-- / SELECTED BAR -->
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <mat-table class="incomplete-user-list-table"
+                       #table [dataSource]="dataSource"
+                       matSort
+                       [@animateStagger]="{value:'50'}"
+                       fusePerfectScrollbar>
+                
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="checkbox">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let user">
+                        <mat-checkbox [(ngModel)]="checkboxes[user.uid]" (ngModelChange)="onSelectedChange(user.uid)"
+                                    (click)="$event.stopPropagation()">
+                        </mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxShow.gt-xs>Email</mat-header-cell>
+                    <mat-cell *matCellDef="let user" fxShow.gt-xs>
+                        <p>{{user.email}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Status Column -->
+                <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>Status</mat-header-cell>
+                    <mat-cell *matCellDef="let user" fxHide fxShow.gt-md>
+                        <span *ngIf="user.status=='online'" class="status h6 p-4 green-600">online</span>
+                        <span *ngIf="user.status=='offline'" class="status h6 p-4 red-600">offline</span>                        
+                        <span *ngIf="user.status=='away'" class="status h6 p-4 yellow-600">away</span>                        
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Platform Column -->
+                <ng-container matColumnDef="platform">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>Platform</mat-header-cell>
+                    <mat-cell *matCellDef="let user" fxHide fxShow.gt-md>
+                        <p>{{user.platform}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Create Date Column -->
+                <ng-container matColumnDef="createdAt">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Create Date</mat-header-cell>
+                    <mat-cell *matCellDef="let user" fxHide fxShow.gt-sm>
+                            <p>{{user.createdAt | date:"MM/dd/yyyy h:mm a"}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="detailAction">
+                    <mat-header-cell *matHeaderCellDef fxHide mat-sort-header fxShow.gt-sm>Action</mat-header-cell>
+                    <mat-cell *matCellDef="let user" fxHide fxShow.gt-sm>                        
+                            <button mat-stroked-button color="accent" aria-label="Detail"
+                                [routerLink]="'/users/incomplete-users/list/'+ user.uid">
+                                <mat-icon class="secondary-text" color="accent">remove_red_eye</mat-icon>
+                                <span> Detail</span>
+                            </button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+                <mat-row *matRowDef="let user; columns: displayedColumns;"
+                         class="incomplete-user"
+                         matRipple
+                         [routerLink]="'/users/incomplete-users/list/' + user.uid"
+                         [@animate]="{value:'*',params:{y:'100%'}}">
+                </mat-row>
+
+            </mat-table>
+
+            <mat-paginator #paginator
+                           [length]="dataSource.filteredData.length"
+                           [pageIndex]="0"
+                           [pageSize]="10"
+                           [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons>
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

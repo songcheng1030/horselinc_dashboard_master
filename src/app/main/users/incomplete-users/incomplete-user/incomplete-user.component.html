@@ -1,0 +1,120 @@
+<div id="incomplete-user" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" (click)="returnPreviousPage()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <div fxLayout="column" fxLayoutAlign="start start" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h1" *ngIf="pageType ==='edit'">
+                        User Detail ( {{user.email}} )
+                    </div>
+                    <div class="h1" *ngIf="pageType ==='new'">
+                        New User
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card mb-32 pb-32" fusePerfectScrollbar>
+
+            <!-- CONTENT -->
+            <div class="content p-24">
+                <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="m-0 mr-16 secondary-text">ballot</mat-icon>
+                    <div class="h2 secondary-text">User Detail</div>
+                </div>
+                <!-- IncompleteUser Detail -->
+                <div class="incomplete-user-detail">
+                    <form name="userForm" [formGroup]="userForm" class="user w-100-p" fxLayout="column" fxFlex>
+                        <div class="tab-content p-24" fusePerfectScrollbar fxLayout="column">
+                            
+                            <!-- Email and CreatedAt -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Email</mat-label>
+                                    <input matInput placeholder="Email" name="email" formControlName="email" required>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>CreatedAt</mat-label>                                    
+                                    <input name="createdAt" formControlName="createdAt" matInput readonly>
+                                </mat-form-field>
+
+                            </div>
+
+                            <!-- Platform and Status -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">                                
+                                <mat-form-field appearance="outline" fxFlex="48">                                            
+                                    <mat-label>Platform</mat-label>
+                                    <mat-select formControlName="platform" required>
+                                        <mat-option value="iOS">iOS</mat-option>
+                                        <mat-option value="Android">Android</mat-option>
+                                        <mat-option value="Web">Web</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="48">                                            
+                                    <mat-label>Status</mat-label>
+                                    <mat-select formControlName="status" required>
+                                        <mat-option value="online">Online</mat-option>
+                                        <mat-option value="offline">Offline</mat-option>
+                                        <mat-option value="away">Away</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Token -->
+                            <div fxLayout="row">
+                                <mat-form-field appearance="outline" floatLabel="always"  fxFlex="100">
+                                    <mat-label>Token</mat-label>
+                                    <input matInput placeholder="Token" name="token" formControlName="token" readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Control button -->
+                            <div fxLayout="row" fxLayoutAlign="end">
+                                <button mat-stroked-button class="save-user-button mr-16"  color="warn"
+                                    *ngIf="pageType==='edit'" (click)="deleteIncompleteUser()">
+                                    <span>Delete User</span>
+                                </button>
+                                <button mat-raised-button class="save-user-button"  color="accent" [disabled]="userForm.invalid"
+                                        *ngIf="pageType==='edit'" (click)="saveIncompleteUser()">
+                                        <span>Save User</span>
+                                </button>
+                                
+                                <button mat-raised-button class="save-user-button"  color="accent" [disabled]="userForm.invalid" *ngIf="pageType ==='new'"
+                                        (click)="addIncompleteUser()">
+                                        <span>Add User</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+                <!-- / IncompleteUser Detail -->
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

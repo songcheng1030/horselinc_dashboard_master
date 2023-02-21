@@ -1,0 +1,259 @@
+<div id="request" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" (click)="returnPreviousPage()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <div fxLayout="column" fxLayoutAlign="start start" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h1" *ngIf="pageType ==='edit'">
+                        Service Request Detail
+                    </div>
+                    <div class="h1" *ngIf="pageType ==='new'">
+                        New Service Request
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card mb-32 pb-32" fusePerfectScrollbar>
+
+            <!-- CONTENT -->
+            <div class="content p-24">
+                <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="m-0 mr-16 secondary-text">ballot</mat-icon>
+                    <div class="h2 secondary-text">Request Detail</div>
+                </div>
+                <!-- Request Detail -->
+                <div class="request-detail">
+                    <form name="requestForm" [formGroup]="requestForm" class="request w-100-p" fxLayout="column" fxFlex>
+                        <div class="tab-content p-24" fusePerfectScrollbar fxLayout="column">
+                            
+                            <!-- requestDate and competitionClass -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <!-- <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Request Date</mat-label>
+                                    <input matInput placeholder="Request Date" name="requestDate" formControlName="requestDate" required>
+                                </mat-form-field> -->
+
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Request Date</mat-label>
+                                    <input matInput [matDatepicker]="picker" placeholder="Request Date" name="requestDate" formControlName="requestDate" required>
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Competition Class</mat-label>
+                                    <input matInput placeholder="Competition Class" name="competitionClass" formControlName="competitionClass">
+                                </mat-form-field>
+                            </div>
+
+                            <!-- horseBarnName and horseDisplayName // hidden field -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48" class="horseBarnName">
+                                    <mat-label>horseBarnName</mat-label>
+                                    <input matInput placeholder="horseBarnName" name="horseBarnName" formControlName="horseBarnName">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48" class="horseDisplayName">
+                                    <mat-label>horseDisplayName</mat-label>
+                                    <input matInput placeholder="horseDisplayName" name="horseDisplayName" formControlName="horseDisplayName">
+                                </mat-form-field>
+                            </div>
+
+                            <!-- horseId and showId-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>Horse</mat-label>
+                                    <mat-select formControlName="horseId" required>
+                                        <mat-select-search [formControl]="horseFilterCtrl"></mat-select-search>
+                                        <mat-option *ngFor="let horse of filteredHorses | async" [value]="horse.uid">
+                                            {{horse.displayName}}
+                                        </mat-option>
+                                    </mat-select>                    
+                                    <mat-error>Horse is required!</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>Show</mat-label>
+                                    <mat-select formControlName="showId">
+                                        <mat-select-search [formControl]="showFilterCtrl"></mat-select-search>
+                                        <mat-option *ngFor="let show of filteredShows | async" [value]="show.uid">
+                                            {{show.name}}
+                                        </mat-option>
+                                    </mat-select>                    
+                                    <mat-error>Show is required!</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- instruction -->
+                            <div fxLayout="row">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="100">                                    
+                                    <mat-label>Instruction</mat-label>                        
+                                    <textarea name="instruction" formControlName="instruction" placeholder="Instruction" matInput type="text" max-rows="2"></textarea>                                    
+                                </mat-form-field>
+                            </div>
+
+                            <!-- providerNote -->
+                            <div fxLayout="row">
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="100">                                    
+                                    <mat-label>Provider Note</mat-label>                        
+                                    <textarea name="providerNote" formControlName="providerNote" placeholder="Provider Note" matInput type="text" max-rows="2"></textarea>                                    
+                                </mat-form-field>
+                            </div>
+
+                            <!-- serviceProviderId and assignerId-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>Service Provider</mat-label>
+                                    <mat-select formControlName="serviceProviderId" required>
+                                        <mat-select-search [formControl]="serviceProviderFilterCtrl"></mat-select-search>
+                                        <mat-option *ngFor="let user of filteredServiceProviders | async" [value]="user.userId">
+                                            {{user.name}}
+                                        </mat-option>
+                                    </mat-select>                   
+                                    <mat-error>ServiceProvider is required!</mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>Assigner</mat-label>
+                                    <mat-select formControlName="assignerId">
+                                        <mat-select-search [formControl]="assignerFilterCtrl"></mat-select-search>
+                                        <mat-option *ngFor="let user of filteredAssigners | async" [value]="user.userId">
+                                            {{user.name}}
+                                        </mat-option>
+                                    </mat-select>                                                        
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Dismissed by-->
+                            <div fxLayout="row">
+                                <mat-form-field appearance="outline" fxFlex="100">
+                                        <mat-label>Dismissed By</mat-label>
+                                        <mat-select formControlName="dismissedBy" [multiple]="true">
+                                            <mat-select-search [formControl]="dismissedByFilterCtrl"></mat-select-search>
+                                            <mat-option *ngFor="let user of filteredDismiss | async" [value]="user.userId">
+                                                {{user.name}}
+                                            </mat-option>
+                                        </mat-select>                   
+                                </mat-form-field>
+                            </div>
+
+                            <!-- status and creatorId-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" fxFlex="48">                                            
+                                    <mat-label>Status</mat-label>
+                                    <mat-select formControlName="status" required>
+                                        <mat-option value="pending">pending</mat-option>
+                                        <mat-option value="accepted">accepted</mat-option>
+                                        <mat-option value="declined">declined</mat-option>
+                                        <mat-option value="completed">completed</mat-option>
+                                        <mat-option value="deleted">deleted</mat-option>
+                                        <mat-option value="invoiced">invoiced</mat-option>
+                                        <mat-option value="paid">paid</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>Creator</mat-label>
+                                    <mat-select formControlName="creatorId" required>
+                                        <mat-select-search [formControl]="creatorFilterCtrl"></mat-select-search>
+                                        <mat-option *ngFor="let user of filteredCreators | async" [value]="user.userId">
+                                            {{user.name}}
+                                        </mat-option>
+                                    </mat-select>                    
+                                    <mat-error>Creator is required!</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- CreatedAt and UpdatedAt-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>CreatedAt</mat-label>                                    
+                                    <input name="created At" formControlName="createdAt" matInput readonly>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>UpdatedAt</mat-label>                                    
+                                    <input name="updated At" formControlName="updatedAt" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- isCustomRequest and Control button -->
+                            <div fxLayout="row" fxLayoutAlign="space-between">                                
+                                
+                                <mat-label>isCustomRequest:</mat-label>
+                                <mat-radio-group  required name="isCustomRequest" formControlName="isCustomRequest" class="pb-16">
+                                    <mat-radio-button class="ml-24" value='true'>Yes</mat-radio-button>
+                                    <mat-radio-button class="ml-24" value='false'>No</mat-radio-button>
+                                </mat-radio-group>                                
+
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>Invoice ID</mat-label>                                    
+                                    <input name="Invoice ID" formControlName="invoiceId" matInput readonly required>
+                                </mat-form-field>
+                             
+                            </div>
+
+                            <!-- Control button -->
+                            <div fxLayout="row" fxLayoutAlign="end start">
+                                <button mat-stroked-button class="save-request-button mr-16"  color="warn"
+                                    *ngIf="pageType==='edit'" (click)="deleteRequest()">
+                                    <span>Delete Request</span>
+                                </button>
+                                <button mat-raised-button class="save-request-button"  color="accent" [disabled]="requestForm.invalid || requestForm.pristine"
+                                        *ngIf="pageType==='edit'" (click)="saveRequest()">
+                                        <span>Save Request</span>
+                                </button>
+                                
+                                <button mat-raised-button class="save-request-button"  color="accent" [disabled]="requestForm.invalid" *ngIf="pageType ==='new'"
+                                        (click)="addRequest()">
+                                        <span>Add Request</span>
+                                </button>
+                            </div>   
+
+                            
+                        </div>
+                        
+                    </form>
+                </div>
+                <!-- / Request Detail -->
+
+                <!-- Listeners -->
+                <!-- <div class="listeners-content" fxLayout="row" fxLayoutAlign="center center" *ngIf="pageType ==='edit'">
+                    <listeners class="listeners-table"></listeners>
+                </div> -->
+                <!-- / Listeners -->
+
+                <!-- Service -->
+                <div class="services-content" fxLayout="row" fxLayoutAlign="center center" *ngIf="pageType ==='edit'">
+                    <services class="services-table"></services>
+                </div>
+                <!-- / Service -->
+                
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

@@ -1,0 +1,58 @@
+#service-provider {
+
+    .header {
+        .subtitle {
+            margin: 6px 0 0 0;
+        }
+    }
+
+    .content-card {
+        .horse-detail {
+            .save-horse-button {                
+                height:45px;
+                width: 150px;
+                margin-top:10px;
+            }
+
+        }
+
+        .active-icon {
+            border-radius: 50%;
+        }
+
+        .avatar-cropper {
+            padding-top:10px;
+            max-width: 600px;
+            max-height: 600px;
+        }
+        .avatar-img {
+            padding-top:10px;
+            max-width: 300px;
+            max-height: 300px;
+        }
+
+        .upload-progress {
+            margin: 10px 0;
+        }
+
+        .detail {
+            margin-top: 4pt;
+            font-size: 9pt;
+            max-width: none;
+        }
+
+        .provider-services-content{
+            width: 100%;     
+            margin-top:50px;
+        }
+
+        .provider-services-table{
+            text-align: right;
+            display: inline;
+        }
+
+
+    }
+    
+
+}

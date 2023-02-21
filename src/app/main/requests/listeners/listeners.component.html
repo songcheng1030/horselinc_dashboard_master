@@ -1,0 +1,67 @@
+<div fxLayout="row" fxLayoutAlign="begin center">
+    <mat-icon class="m-0 mr-16 secondary-text">layers</mat-icon>
+    <div class="h2 secondary-text">Listeners</div>
+</div>
+
+<mat-table #table [dataSource]="dataSource" [@animateStagger]="{value:'50'}">
+
+    <!-- UserId Column -->
+    <ng-container matColumnDef="userId">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md>User Id</mat-header-cell>
+        <mat-cell *matCellDef="let listener" fxHide fxShow.gt-md>
+            <p class="text-truncate font-weight-600">{{listener.userId}}</p>
+        </mat-cell>
+    </ng-container>
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+        <mat-cell *matCellDef="let listener">
+            <p class="text-truncate font-weight-600">{{listener.user.name}}</p>
+        </mat-cell>
+    </ng-container>
+
+    <!-- UserType Column -->
+    <ng-container matColumnDef="userType">
+        <mat-header-cell *matHeaderCellDef  fxHide fxShow.gt-xs>User Type</mat-header-cell>
+        <mat-cell *matCellDef="let listener"  fxHide fxShow.gt-xs>
+            <p class="text-truncate font-weight-600">{{listener.userType}}</p>
+        </mat-cell>
+    </ng-container>
+
+
+    <!-- <ng-container matColumnDef="edit-buttons">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-xs>Edit Actions</mat-header-cell>
+        <mat-cell *matCellDef="let listener" fxHide fxShow.gt-xs>
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();editListener(listener)" color="accent">
+                    <mat-icon aria-label="">edit</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete-buttons">
+        <mat-header-cell *matHeaderCellDef>Delete Actions</mat-header-cell>
+        <mat-cell *matCellDef="let listener">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();deleteListener(listener)" color="warn">
+                    <mat-icon aria-label="">delete</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container> -->
+    
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>    
+    <mat-row *matRowDef="let listener; columns: displayedColumns;" 
+        matRipple [@animate]="{value:'*',params:{y:'100%'}}">
+    </mat-row> <!-- (click)="editListener(listener)" -->
+</mat-table>
+
+<div fxLayout="row" fxLayoutAlign="end center" class="pr-24 pt-24">
+    <!-- ADD BUTTON -->
+    <!--<button mat-stroked-button color="accent" id="add-listener-button" (click)="newListener()"
+        aria-label="add listener" [@animate]="{value:'*', params:{delay:'300ms',scale:'.2'}}">
+        Add Listener
+    </button> -->
+    <!-- / ADD BUTTON -->
+</div>

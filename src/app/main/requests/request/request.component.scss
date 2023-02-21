@@ -1,0 +1,56 @@
+#request {
+
+    .header {
+        .subtitle {
+            margin: 6px 0 0 0;
+        }
+    }
+
+    .content-card {
+        .request-detail {
+            .save-request-button {                
+                height:45px;
+                width: 150px;
+                margin-top:10px;
+            }
+
+        }
+
+        .active-icon {
+            border-radius: 50%;
+        }
+
+        .horseBarnName, .horseDisplayName {
+            display: none;
+        }
+        
+        .detail {
+            margin-top: 4pt;
+            font-size: 9pt;
+            max-width: none;
+        }
+
+        .listeners-content{
+            width: 100%;        
+        }
+
+        .listeners-table{
+            text-align: right;
+            display: inline;
+        }
+
+        .services-content{
+            width: 100%;     
+            margin-top:50px;
+        }
+
+        .services-table{
+            text-align: right;
+            display: inline;
+        }
+
+
+    }
+    
+
+}

@@ -1,0 +1,44 @@
+@import "src/@fuse/scss/fuse";
+
+owners {
+    display: flex;
+    flex: 1 1 auto;
+    width: 100%;
+
+    .mat-table {
+        width: 100%;
+        background: transparent;
+        box-shadow: none;
+        
+        .mat-column-buttons {
+            flex: 0 1 80px;
+        }
+
+        .mat-row {
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            height: 40px;
+        }
+
+        .mat-column-edit-buttons {
+            flex: 0 1 160px;
+        }
+
+        .mat-column-delete-buttons {
+            flex: 0 1 160px;
+        }
+
+
+    }
+    
+}
+
+#add-owner-button {
+    height:45px;    
+    @include media-breakpoint('xs') {
+        position: sticky;
+        top: calc(100vh - 120px);
+        bottom: auto;
+    }
+}

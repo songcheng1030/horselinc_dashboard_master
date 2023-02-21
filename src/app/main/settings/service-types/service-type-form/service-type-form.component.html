@@ -1,0 +1,47 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar matDialogTitle class="mat-accent m-0">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{dialogTitle}}</span>
+            <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-32 pb-0 mt-20 m-0" fusePerfectScrollbar>
+
+        <form [formGroup]="ServiceTypeForm">
+            <!-- Key -->
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Key</mat-label>
+                    <input name="key" formControlName="key" matInput required>
+                </mat-form-field>
+            </div>
+            <!-- Value -->
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Value</mat-label>
+                    <input name="value" formControlName="value" matInput required>
+                </mat-form-field>
+            </div>
+        </form>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+
+        <button mat-raised-button class="accent" *ngIf="action === 'edit'" mat-button class="mr-8" (click)="matDialogRef.close(['delete',ServiceTypeForm])" aria-label="Delete" matTooltip="Delete">
+            DELETE
+        </button>
+
+        <button mat-raised-button *ngIf="action !== 'edit'" mat-button class="accent save-button" (click)="matDialogRef.close(ServiceTypeForm)" [disabled]="ServiceTypeForm.invalid" aria-label="SAVE">
+            ADD
+        </button>
+
+        <button mat-raised-button *ngIf="action === 'edit'" mat-button class="accent save-button" (click)="matDialogRef.close(['save',ServiceTypeForm])" [disabled]="ServiceTypeForm.invalid" aria-label="SAVE">
+            SAVE
+        </button>
+
+    </div>
+</div>

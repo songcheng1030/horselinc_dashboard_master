@@ -1,0 +1,56 @@
+#invoice {
+
+    .header {
+        .subtitle {
+            margin: 6px 0 0 0;
+        }
+    }
+
+    .content-card {
+        .invoice-detail {
+            .save-invoice-button {                
+                height:45px;
+                width: 150px;
+                margin-top:10px;
+            }
+
+        }
+
+        .active-icon {
+            border-radius: 50%;
+        }
+
+        .uid-field {
+            display: none;
+        }
+        
+        .detail {
+            margin-top: 4pt;
+            font-size: 9pt;
+            max-width: none;
+        }
+
+        .invoice-payments-content{
+            width: 100%;        
+        }
+
+        .invoice-payments-table{
+            text-align: left;
+            display: inline;
+        }
+
+        .invoice-requests-content{
+            width: 100%;     
+            margin-top:50px;
+        }
+
+        .invoice-requests-table{
+            text-align: left;
+            display: inline;
+        }
+
+
+    }
+    
+
+}

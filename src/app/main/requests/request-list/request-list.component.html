@@ -1,0 +1,204 @@
+<div id="request-list" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent"
+             fxLayout="column" fxLayoutAlign="center center"
+             fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0"
+                 fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                        question_answer
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    Service Requests
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="Search for a request">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            <!-- BUTTONS -->
+            <div class="mx-32 mx-md-0">
+                <!-- ADD BUTTON -->
+                <button mat-raised-button
+                        [routerLink]="'/requests/new'"
+                        class="add-horse-button fuse-white mt-24 mt-md-0 mr-16"
+                        style="display: none">
+                        <mat-icon class="logo-icon s-24 mr-8" [@animate]="{value:'*',params:{delay:'200ms',scale:'0.2'}}">
+                            add_circle_outline
+                        </mat-icon>
+                        <span>Create</span>
+                </button>                
+                <!-- Export CSV BUTTON -->
+                <button mat-raised-button
+                        (click)="exportCSV()"
+                        class="add-horse-button fuse-white mt-24 mt-md-0">
+                        <mat-icon class="logo-icon s-24 mr-8" [@animate]="{value:'*',params:{delay:'200ms',scale:'0.2'}}">
+                            cloud_download
+                        </mat-icon>
+                        <span>Export CSV</span>
+                </button>                
+            </div>
+            <!-- / BUTTONS -->
+
+        </div>
+        <!-- / HEADER -->
+        <!-- SELECTED BAR -->
+        <selected-bar class="accent-600" *ngIf="hasSelectedRequestList" [@slideInTop]></selected-bar>
+        <!-- / SELECTED BAR -->
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <mat-table class="request-list-table"
+                       #table [dataSource]="dataSource"
+                       matSort
+                       [@animateStagger]="{value:'50'}"
+                       fusePerfectScrollbar>
+                
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="checkbox">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let request">
+                        <mat-checkbox [(ngModel)]="checkboxes[request.uid]" (ngModelChange)="onSelectedChange(request.uid)"
+                                    (click)="$event.stopPropagation()">
+                        </mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+                
+                <!-- RequestDate Column -->
+                <ng-container matColumnDef="requestDate">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Request Date</mat-header-cell>
+                    <mat-cell *matCellDef="let request">
+                        <p>{{request.requestDate | date:"MM/dd/yyyy"}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- CompetitionClass Column -->
+                <!-- <ng-container matColumnDef="competitionClass">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>CompetitionClass</mat-header-cell>
+                    <mat-cell *matCellDef="let request"   fxHide fxShow.gt-xs>
+                        <p>{{request.competitionClass}}</p>
+                    </mat-cell>
+                </ng-container> -->
+
+                <!-- Horse Column -->
+                <ng-container matColumnDef="horse">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Horse</mat-header-cell>
+                    <mat-cell *matCellDef="let request" fxHide fxShow.gt-xs>                        
+                        <a *ngIf="request.horse" [routerLink]="'/horses/list/'+ request.horseId">{{request.horse.displayName}}</a>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Show Column -->
+                <ng-container matColumnDef="show">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Show</mat-header-cell>
+                    <mat-cell *matCellDef="let request">
+                        <p *ngIf="request.show">{{request.show.name}}</p>
+                    </mat-cell>
+                </ng-container>                         
+
+                <!-- Status Column -->
+                <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm fxLayoutAlign="start center">Status</mat-header-cell>
+                    <mat-cell *matCellDef="let request" fxHide fxShow.gt-sm fxLayoutAlign="start center">
+                        <!-- <p>{{request.status}}</p> -->
+                        <span *ngIf="request.status=='paid'" class="status h6 p-4 green-600">Paid</span>
+                        <span *ngIf="request.status=='completed'" class="status h6 p-4 green-600">Completed</span>
+                        <span *ngIf="request.status=='accepted'" class="status h6 p-4 green-600">Accepted</span>
+                        <span *ngIf="request.status=='deleted'" class="status h6 p-4 red-400">Deleted</span>
+                        <span *ngIf="request.status=='declined'" class="status h6 p-4 red-400">Declined</span>
+                        <span *ngIf="request.status=='pending'" class="status h6 p-4 blue-600">Pending</span>
+                        <span *ngIf="request.status=='invoiced'" class="status h6 p-4 blue-600">Invoiced</span>                        
+                    </mat-cell>
+                </ng-container> 
+
+                <!-- serviceProvider Column -->
+                <ng-container matColumnDef="serviceProvider">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>ServiceProvider</mat-header-cell>
+                    <mat-cell *matCellDef="let request" fxHide fxShow.gt-sm>                        
+                        <a *ngIf="request.serviceProvider" [routerLink]="'/users/service-providers/list/'+ request.serviceProviderId">{{request.serviceProvider.name}}</a>
+                    </mat-cell>
+                </ng-container>
+                <!-- Assigner Column -->
+                <ng-container matColumnDef="assigner">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Assigner</mat-header-cell>
+                    <mat-cell *matCellDef="let request" fxHide fxShow.gt-sm>                        
+                        <a *ngIf="request.assigner" [routerLink]="'/users/service-providers/list/'+ request.assignerId">{{request.assigner.name}}</a>
+                    </mat-cell>
+                </ng-container>
+                      
+                <!-- isCustomRequest Column -->
+                <!-- <ng-container matColumnDef="isCustomRequest">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md fxLayoutAlign="center center">isCustom Request</mat-header-cell>
+                    <mat-cell *matCellDef="let request" fxHide fxShow.gt-md fxLayoutAlign="center center">
+                            <mat-icon *ngIf="request.isCustomRequest" class="active-icon green-600 s-16">check</mat-icon>
+                            <mat-icon *ngIf="!request.isCustomRequest" class="active-icon red-500 s-16">close</mat-icon>
+                    </mat-cell>
+                </ng-container> -->
+                <!-- Creator Column -->
+                <ng-container matColumnDef="creator">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Creator</mat-header-cell>
+                    <mat-cell *matCellDef="let request">
+                        <a *ngIf="request.creator" [routerLink]="'/users/horse-managers/list/'+ request.creatorId">{{request.creator.name}}</a>                        
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Create Date Column -->
+                <ng-container matColumnDef="createdAt">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>Create Date</mat-header-cell>
+                    <mat-cell *matCellDef="let request" fxHide fxShow.gt-md>
+                            <p>{{request.createdAt | date:"MM/dd/yyyy h:mm a"}}</p> <!-- {{request.createdAt | date:"MM/dd/yyyy h:mm a"}} -->
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Detail View Action -->
+                <ng-container matColumnDef="detailAction">
+                    <mat-header-cell *matHeaderCellDef fxHide mat-sort-header fxShow.gt-md>Action</mat-header-cell>
+                    <mat-cell *matCellDef="let request" fxHide fxShow.gt-md>                        
+                            <button mat-stroked-button color="accent" aria-label="Detail"
+                                [routerLink]="'/requests/list/'+ request.uid">
+                                <mat-icon class="secondary-text" color="accent">remove_red_eye</mat-icon>
+                                <span> Detail</span>
+                            </button>
+                    </mat-cell>
+                </ng-container>
+                
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+                <mat-row *matRowDef="let request; columns: displayedColumns;"
+                         class="request"
+                         matRipple
+                         [@animate]="{value:'*',params:{y:'100%'}}"
+                         > <!-- [routerLink]="'/requests/list/'+request.uid" -->
+                </mat-row>
+
+            </mat-table>
+
+            <mat-paginator #paginator
+                           [length]="dataSource.filteredData.length"
+                           [pageIndex]="0"
+                           [pageSize]="10"
+                           [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons>
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

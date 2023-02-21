@@ -1,0 +1,175 @@
+<div id="invoice-list" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent"
+             fxLayout="column" fxLayoutAlign="center center"
+             fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between center">
+             
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0"
+                 fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    receipt
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    Invoices
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="Search for a invoice">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            <!-- BUTTONS -->
+            <div class="mx-32 mx-md-0">
+                <!-- ADD BUTTON -->
+                <button mat-raised-button
+                        [routerLink]="'/invoices/new'"
+                        class="add-horse-button fuse-white mt-24 mt-md-0 mr-16">
+                        <mat-icon class="logo-icon s-24 mr-8" [@animate]="{value:'*',params:{delay:'200ms',scale:'0.2'}}">
+                            add_circle_outline
+                        </mat-icon>
+                        <span>Create</span>
+                </button>                
+                <!-- Export CSV BUTTON -->
+                <button mat-raised-button
+                        (click)="exportCSV()"
+                        class="add-horse-button fuse-white mt-24 mt-md-0">
+                        <mat-icon class="logo-icon s-24 mr-8" [@animate]="{value:'*',params:{delay:'200ms',scale:'0.2'}}">
+                            cloud_download
+                        </mat-icon>
+                        <span>Export CSV</span>
+                </button>                
+            </div>
+            <!-- / BUTTONS -->
+
+        </div>
+        <!-- / HEADER -->
+        <!-- SELECTED BAR -->
+        <selected-bar class="accent-600" *ngIf="hasSelectedInvoiceList" [@slideInTop]></selected-bar>
+        <!-- / SELECTED BAR -->
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <mat-table class="invoice-list-table"
+                       #table [dataSource]="dataSource"
+                       matSort
+                       [@animateStagger]="{value:'50'}"
+                       fusePerfectScrollbar>
+                
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="checkbox">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let invoice">
+                        <mat-checkbox [(ngModel)]="checkboxes[invoice.uid]" (ngModelChange)="onSelectedChange(invoice.uid)"
+                                    (click)="$event.stopPropagation()">
+                        </mat-checkbox>
+                    </mat-cell>
+                </ng-container>                
+                <!-- name Column -->
+                <!-- <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                    <mat-cell *matCellDef="let invoice">
+                        <p>{{invoice.name}}</p>
+                    </mat-cell>
+                </ng-container> -->
+
+                <!-- Id Column -->
+                <!-- <ng-container matColumnDef="uid">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>Invoice ID</mat-header-cell>
+                    <mat-cell *matCellDef="let invoice" fxHide fxShow.gt-md>
+                        <p>{{invoice.uid}}</p>
+                    </mat-cell>
+                </ng-container> -->
+
+                <!-- amount Column -->
+                <ng-container matColumnDef="amount">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Amount</mat-header-cell>
+                    <mat-cell *matCellDef="let invoice">
+                        <p>{{invoice.amount  | number}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- tip Column -->
+                <ng-container matColumnDef="tip">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Tip</mat-header-cell>
+                    <mat-cell *matCellDef="let invoice" fxHide fxShow.gt-xs>
+                        <p>{{invoice.tip | number}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Status Column -->
+                <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxLayoutAlign="start center">Status</mat-header-cell>
+                    <mat-cell *matCellDef="let invoice" fxLayoutAlign="start center">
+                        <!-- <p>{{invoice.status}}</p> -->
+                        <span *ngIf="invoice.status=='submitted'" class="status h6 p-4 red-600">submitted</span>
+                        <span *ngIf="invoice.status=='paid'" class="status h6 p-4 blue-600">paid</span>
+                        <span *ngIf="invoice.status=='fullPaid'" class="status h6 p-4 green-600">fullPaid</span>
+                    </mat-cell>
+                </ng-container> 
+
+                <!-- Paid Date Column -->
+                <ng-container matColumnDef="paidAt">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>Paid Date</mat-header-cell>
+                    <mat-cell *matCellDef="let invoice" fxHide fxShow.gt-md>
+                            <p>{{invoice.paidAt | date:"MM/dd/yyyy"}}</p> 
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Create Date Column -->
+                <ng-container matColumnDef="createdAt">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>Create Date</mat-header-cell>
+                    <mat-cell *matCellDef="let invoice" fxHide fxShow.gt-md>
+                            <p>{{invoice.createdAt | date:"MM/dd/yyyy h:mm a"}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                    <!-- Detail Action -->
+                <ng-container matColumnDef="detailAction">
+                    <mat-header-cell *matHeaderCellDef fxHide mat-sort-header fxShow.gt-md>Action</mat-header-cell>
+                    <mat-cell *matCellDef="let invoice" fxHide fxShow.gt-md>                        
+                            <button mat-stroked-button color="accent" aria-label="Detail"
+                                [routerLink]="'/invoices/list/'+invoice.uid">
+                                <mat-icon class="secondary-text" color="accent">remove_red_eye</mat-icon>
+                                <span> Detail</span>
+                            </button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+                <mat-row *matRowDef="let invoice; columns: displayedColumns;"
+                         class="invoice pt-8 pb-8"
+                         matRipple
+                         [routerLink]="'/invoices/list/'+invoice.uid"
+                         [@animate]="{value:'*',params:{y:'100%'}}">
+                </mat-row>
+
+            </mat-table>
+
+            <mat-paginator #paginator
+                           [length]="dataSource.filteredData.length"
+                           [pageIndex]="0"
+                           [pageSize]="10"
+                           [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons>
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

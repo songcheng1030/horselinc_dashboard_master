@@ -1,0 +1,67 @@
+<div fxLayout="row" fxLayoutAlign="begin center">
+    <mat-icon class="m-0 mr-16 secondary-text">layers</mat-icon>
+    <div class="h2 secondary-text">Services</div>
+</div>
+
+<mat-table #table [dataSource]="dataSource" [@animateStagger]="{value:'50'}">
+
+    <!-- Service Column -->
+    <ng-container matColumnDef="service">
+        <mat-header-cell *matHeaderCellDef>Service</mat-header-cell>
+        <mat-cell *matCellDef="let service">
+            <p class="text-truncate font-weight-600">{{service.service}}</p>
+        </mat-cell>
+    </ng-container>
+
+    <!-- quantity Column -->
+    <ng-container matColumnDef="quantity">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md>Quantity</mat-header-cell>
+        <mat-cell *matCellDef="let service" fxHide fxShow.gt-md>
+            <p class="text-truncate font-weight-600">{{service.quantity}}</p>
+        </mat-cell>
+    </ng-container>
+
+    <!-- rate Column -->
+    <ng-container matColumnDef="rate">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md>Rate</mat-header-cell>
+        <mat-cell *matCellDef="let service" fxHide fxShow.gt-md>
+            <p class="text-truncate font-weight-600">{{service.rate}}</p>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="edit-buttons">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-xs>Edit Actions</mat-header-cell>
+        <mat-cell *matCellDef="let service" fxHide fxShow.gt-xs>
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();editService(service)" color="accent">
+                    <mat-icon aria-label="">edit</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete-buttons">
+        <mat-header-cell *matHeaderCellDef>Delete Actions</mat-header-cell>
+        <mat-cell *matCellDef="let service">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();deleteService(service)" color="warn">
+                    <mat-icon aria-label="">delete</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+    
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>    
+    <mat-row *matRowDef="let service; columns: displayedColumns;" (click)="editService(service)"
+        matRipple [@animate]="{value:'*',params:{y:'100%'}}">
+    </mat-row>
+</mat-table>
+
+<div fxLayout="row" fxLayoutAlign="end center" class="pr-24 pt-24">
+    <!-- ADD BUTTON -->
+    <button mat-stroked-button color="accent" id="add-service-button" (click)="newService()"
+        aria-label="add service" [@animate]="{value:'*', params:{delay:'300ms',scale:'.2'}}">
+        Add Service
+    </button>
+    <!-- / ADD BUTTON -->
+</div>

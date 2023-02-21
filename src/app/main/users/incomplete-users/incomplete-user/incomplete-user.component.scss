@@ -1,0 +1,33 @@
+#incomplete-user {
+
+    .header {
+        .subtitle {
+            margin: 6px 0 0 0;
+        }
+    }
+
+    .content-card {
+        .user-detail {
+            .save-user-button {                
+                height:45px;
+                width: 150px;
+                margin-top:10px;
+            }
+
+        }
+
+        .active-icon {
+            border-radius: 50%;
+        }
+
+        
+        .detail {
+            margin-top: 4pt;
+            font-size: 9pt;
+            max-width: none;
+        }
+
+    }
+    
+
+}

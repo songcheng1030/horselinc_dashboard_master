@@ -1,0 +1,138 @@
+<div id="invoice" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" (click)="returnPreviousPage()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <div fxLayout="column" fxLayoutAlign="start start" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h1" *ngIf="pageType ==='edit'">
+                        Invoice Detail
+                    </div>
+                    <div class="h1" *ngIf="pageType ==='new'">
+                        New Invoice
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card mb-32 pb-32" fusePerfectScrollbar>
+
+            <!-- CONTENT -->
+            <div class="content p-24">
+                <div class="pb-16" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="m-0 mr-16 secondary-text">ballot</mat-icon>
+                    <div class="h2 secondary-text">Invoice Detail</div>
+                </div>
+                
+                <!-- Invoice Detail -->
+                <div class="invoice-detail">
+                    <form name="invoiceForm" [formGroup]="invoiceForm" class="invoice w-100-p" fxLayout="column" fxFlex>
+                        <div class="tab-content p-24" fusePerfectScrollbar fxLayout="column">
+                            
+                            <!-- ID , tip-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">                               
+                                <mat-form-field appearance="outline" floatLabel="always"  fxFlex="0" class="uid-field">
+                                    <mat-label>Invoice ID</mat-label>
+                                    <input matInput placeholder="Invoice ID" name="uid" formControlName="uid" readonly>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" floatLabel="always"  fxFlex="100">
+                                    <mat-label>Tip</mat-label>
+                                    <input matInput type="number" placeholder="tip" name="tip" formControlName="tip">
+                                </mat-form-field>
+                            </div>
+
+                            <!-- status , PaidAt-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline"  fxFlex="48">                                            
+                                    <mat-label>Status</mat-label>
+                                    <mat-select formControlName="status" required>
+                                        <mat-option value="submitted">submitted</mat-option>
+                                        <mat-option value="paid">paid</mat-option>
+                                        <mat-option value="fullPaid">fullPaid</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>PaidAt</mat-label>                                    
+                                    <input name="paidAt" formControlName="paidAt" matInput readonly>
+                                </mat-form-field> -->
+                                <mat-form-field appearance="outline" floatLabel="always" fxFlex="48">
+                                    <mat-label>Paid Date</mat-label>
+                                    <input matInput [matDatepicker]="picker" placeholder="Paid Date" name="paidAt" formControlName="paidAt" required>
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- CreatedAt , UpdatedAt-->
+                            <div fxLayout="row" fxLayoutAlign="space-between">
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>CreatedAt</mat-label>                                    
+                                    <input name="createdAt" formControlName="createdAt" matInput readonly>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" fxFlex="48">
+                                    <mat-label>UpdatedAt</mat-label>                                    
+                                    <input name="updatedAt" formControlName="updatedAt" matInput readonly>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- Control button -->
+                            <div fxLayout="row" fxFlex="48" fxLayoutAlign="end start">
+                                <button mat-stroked-button class="save-invoice-button mr-16"  color="warn"
+                                    *ngIf="pageType==='edit'" (click)="deleteInvoice()">
+                                    <span>Delete Invoice</span>
+                                </button>
+                                <button mat-raised-button class="save-invoice-button"  color="accent" [disabled]="invoiceForm.invalid || invoiceForm.pristine"
+                                        *ngIf="pageType==='edit'" (click)="saveInvoice()">
+                                        <span>Save Invoice</span>
+                                </button>
+                                
+                                <button mat-raised-button class="save-invoice-button"  color="accent" [disabled]="invoiceForm.invalid" *ngIf="pageType ==='new'"
+                                        (click)="addInvoice()">
+                                        <span>Add Invoice</span>
+                                </button>
+                            </div>
+                            
+                        </div>
+                        
+                    </form>
+                </div>
+                <!-- / Invoice Detail -->
+               
+                <!-- Requests -->
+                <div class="invoice-requests-content" fxLayout="row" fxLayoutAlign="center center" *ngIf="pageType ==='edit'">
+                    <invoice-requests class="invoice-requests-table"></invoice-requests>
+                </div>
+                <!-- / Requests -->
+                <!-- Payments -->
+                <div class="invoice-payments-content" fxLayout="row" fxLayoutAlign="center center" *ngIf="pageType ==='edit'">
+                    <invoice-payments class="invoice-payments-table"></invoice-payments>
+                </div>
+                <!-- / Payments -->
+                
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

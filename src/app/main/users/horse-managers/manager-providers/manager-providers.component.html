@@ -1,0 +1,59 @@
+<div fxLayout="row" fxLayoutAlign="begin center">
+    <mat-icon class="m-0 mr-16 secondary-text">layers</mat-icon>
+    <div class="h2 secondary-text">Horse Manager Providers</div>
+</div>
+
+<mat-table #table [dataSource]="dataSource" [@animateStagger]="{value:'50'}">
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+        <mat-cell *matCellDef="let managerProvider">
+            <p class="text-truncate font-weight-600">{{managerProvider.creator.name}}</p>
+        </mat-cell>
+    </ng-container>
+    <!-- serviceType Column -->
+    <ng-container matColumnDef="serviceType">
+        <mat-header-cell *matHeaderCellDef>Service Type</mat-header-cell>
+        <mat-cell *matCellDef="let managerProvider">            
+            <p class="text-truncate font-weight-600">{{managerProvider.serviceType}}</p>
+        </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="edit-buttons">
+        <mat-header-cell *matHeaderCellDef>Edit Actions</mat-header-cell>
+        <mat-cell *matCellDef="let managerProvider">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();editManagerProvider(managerProvider)" color="accent">
+                    <mat-icon aria-label="">edit</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete-buttons">
+        <mat-header-cell *matHeaderCellDef>Delete Actions</mat-header-cell>
+        <mat-cell *matCellDef="let managerProvider">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();deleteManagerProvider(managerProvider)" color="warn">
+                    <mat-icon aria-label="">delete</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+    
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>    
+    <mat-row *matRowDef="let managerProvider; columns: displayedColumns;" (click)="editManagerProvider(managerProvider)"
+        matRipple [@animate]="{value:'*',params:{y:'100%'}}">
+    </mat-row>
+</mat-table>
+
+<div fxLayout="row" fxLayoutAlign="end center" class="pr-24 pt-24">
+    <!-- ADD BUTTON -->
+    <button mat-stroked-button color="accent" id="add-manager-provider-button" (click)="newManagerProvider()"
+        aria-label="add manager provider" [@animate]="{value:'*', params:{delay:'300ms',scale:'.2'}}">
+        Add Manager Provider
+    </button>
+    <!-- / ADD BUTTON -->
+</div>

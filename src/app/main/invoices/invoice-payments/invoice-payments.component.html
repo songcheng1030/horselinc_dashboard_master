@@ -1,0 +1,108 @@
+<div fxLayout="row" fxLayoutAlign="begin center">
+        <mat-icon class="m-0 mr-16 secondary-text">attach_money</mat-icon>
+        <div class="h2 secondary-text">Payments</div>
+</div>
+    
+<mat-table class="invoice-payments-table"
+           #table [dataSource]="dataSource"           
+           [@animateStagger]="{value:'50'}"
+           >
+
+    <!-- Service Provider Column -->
+    <ng-container matColumnDef="serviceProviderId">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm>Service Provider</mat-header-cell>
+        <mat-cell *matCellDef="let payment" fxHide fxShow.gt-sm>            
+            <a *ngIf="payment.serviceProvider" [routerLink]="'/users/service-providers/list/'+ payment.serviceProviderId">{{payment.serviceProvider.name}}</a>
+        </mat-cell>
+    </ng-container>   
+
+    <!-- InvoicePayment Approver Column -->
+    <ng-container matColumnDef="paymentApproverId">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md>Payment Approver</mat-header-cell>
+        <mat-cell *matCellDef="let payment" fxHide fxShow.gt-md>            
+            <a *ngIf="payment.paymentApprover" [routerLink]="'/users/horse-managers/list/'+ payment.paymentApproverId">{{payment.paymentApprover.name}}</a>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Payer Column -->
+    <ng-container matColumnDef="payerId">
+        <mat-header-cell *matHeaderCellDef>Payer</mat-header-cell>
+        <mat-cell *matCellDef="let payment">
+            <a *ngIf="payment.payer" [routerLink]="'/users/horse-managers/list/'+ payment.payerId">{{payment.payer.name}}</a>            
+        </mat-cell>
+    </ng-container>
+
+    <!-- Amount Column -->
+    <ng-container matColumnDef="amount">
+        <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+        <mat-cell *matCellDef="let payment">
+            <p>{{payment.amount}}</p>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Tip Column -->
+    <ng-container matColumnDef="tip">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm>Tip</mat-header-cell>
+        <mat-cell *matCellDef="let payment" fxHide fxShow.gt-sm>
+            <p>{{payment.tip}}</p>
+        </mat-cell>
+    </ng-container>
+
+    <!-- isPaidOutsideApp Column -->
+    <ng-container matColumnDef="isPaidOutsideApp">
+        <mat-header-cell *matHeaderCellDef fxLayoutAlign="center center"  fxHide fxShow.gt-md>PaidOutsideApp</mat-header-cell>
+        <mat-cell *matCellDef="let payment" fxLayoutAlign="center center" fxHide fxShow.gt-md>  <!-- fxLayoutAlign="center center" -->
+            <mat-icon *ngIf="payment.isPaidOutsideApp" class="active-icon green-600 s-16">check</mat-icon>
+            <mat-icon *ngIf="!payment.isPaidOutsideApp" class="active-icon red-500 s-16">close</mat-icon>
+        </mat-cell>
+    </ng-container>
+
+    <!-- CreateAt Column -->
+    <ng-container matColumnDef="createdAt">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md>Created At</mat-header-cell>
+        <mat-cell *matCellDef="let payment" fxHide fxShow.gt-md>
+            <p>
+                {{payment.createdAt}}
+            </p>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="edit-buttons">
+        <mat-header-cell *matHeaderCellDef>Edit Actions</mat-header-cell>
+        <mat-cell *matCellDef="let payment">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();editInvoicePayment(payment)" color="accent">
+                    <mat-icon aria-label="">edit</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete-buttons">
+        <mat-header-cell *matHeaderCellDef>Delete Actions</mat-header-cell>
+        <mat-cell *matCellDef="let payment">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();deleteInvoicePayment(payment)" color="warn">
+                    <mat-icon aria-label="">delete</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+    
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let payment; columns: displayedColumns;"             
+             matRipple
+             [@animate]="{value:'*',params:{y:'100%'}}">
+    </mat-row>
+    
+</mat-table>
+
+<div fxLayout="row" fxLayoutAlign="end center" class="pr-24 pt-24">
+        <!-- ADD BUTTON -->
+        <button mat-stroked-button color="accent" id="add-invoice-payment-button" (click)="newPayment()"
+            aria-label="add payment" [@animate]="{value:'*', params:{delay:'300ms',scale:'.2'}}">
+            Add Payment
+        </button>
+        <!-- / ADD BUTTON -->
+</div>
+    

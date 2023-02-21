@@ -1,0 +1,125 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar matDialogTitle class="mat-accent m-0">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{dialogTitle}}</span>
+            <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pb-0 m-0" fusePerfectScrollbar>
+
+        <form [formGroup]="notificationForm">
+
+            <!-- Recipient Field -->
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>Recipient</mat-label>
+                    <mat-select formControlName="receiverId" required>
+                        <mat-select-search [formControl]="receiverFilterCtrl"></mat-select-search>
+                        <mat-option *ngFor="let user of filteredReceivers | async" [value]="user.userId">
+                            {{user.name}}
+                        </mat-option>
+                    </mat-select>
+                    <!-- <mat-icon matSuffix class="secondary-text">account_circle</mat-icon> -->
+                    <mat-error>Creator is required!</mat-error>
+                </mat-form-field>
+            </div>
+            <!-- // Recipient Field -->
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex="100">
+                        <mat-label>Message</mat-label>                        
+                        <textarea name="message" formControlName="message" matInput type="text" max-rows="4" required></textarea>
+                        <mat-error>Message is required!</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                    <mat-label>Send Push:</mat-label>
+                    <mat-radio-group  required name="isRead" formControlName="isRead" class="pb-16">
+                        <mat-radio-button class="ml-24" value='true'>Yes</mat-radio-button>
+                        <mat-radio-button class="ml-24" value='false'>No</mat-radio-button>
+                    </mat-radio-group>
+            </div>
+
+            <!-- Creator Field -->
+            <div fxLayout="row" fxLayoutAlign="start start">
+
+                    <mat-form-field appearance="outline" fxFlex="100">
+                        <mat-label>Creator</mat-label>
+                        <mat-select formControlName="creatorId" required>
+                            <mat-select-search [formControl]="creatorFilterCtrl"></mat-select-search>
+                            <mat-option *ngFor="let user of filteredCreators | async" [value]="user.userId">
+                                {{user.name}}
+                            </mat-option>
+                        </mat-select>
+                        <!-- <mat-icon matSuffix class="secondary-text">account_circle</mat-icon> -->
+                        <mat-error>Creator is required!</mat-error>
+                    </mat-form-field>
+            </div>
+            <!-- // Creator Field -->
+            <!-- Created At Field -->
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>CreatedAt</mat-label>
+                    <mat-icon matSuffix class="secondary-text">today</mat-icon>
+                    <input name="createdAt" formControlName="createdAt" matInput readonly>
+                </mat-form-field>
+            </div>    
+            <!-- // Created At Field -->
+            <!-- Updated At Field -->
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>UpdatedAt</mat-label>
+                    <mat-icon matSuffix class="secondary-text">today</mat-icon>
+                    <input name="updatedAt" formControlName="updatedAt" matInput readonly>
+                </mat-form-field>
+            </div>    
+            <!-- // Updated At Field -->
+            
+        </form>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+
+        <button *ngIf="action === 'edit'"
+                mat-button
+                class="mr-8"
+                (click)="matDialogRef.close(['delete',notificationForm])"
+                aria-label="Delete"
+                matTooltip="Delete">
+            DELETE
+        </button>
+
+        <button *ngIf="action === 'edit'"
+                mat-button
+                class="save-button"
+                (click)="matDialogRef.close(['save',notificationForm])"
+                [disabled]="notificationForm.invalid"
+                aria-label="SAVE">
+            SAVE
+        </button>
+
+        <button *ngIf="action === 'new'"
+                mat-button
+                class="save-button"
+                (click)="matDialogRef.close(notificationForm)"
+                [disabled]="notificationForm.invalid"
+                aria-label="ADD">
+            ADD
+        </button>
+
+        <button *ngIf="action==='view'"
+                mat-button
+                class="close-button"
+                (click)="matDialogRef.close()"
+                aria-label="CLOSE">
+            CLOSE
+        </button>
+
+    </div>
+</div>

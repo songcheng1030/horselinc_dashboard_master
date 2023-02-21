@@ -1,0 +1,214 @@
+<div id="horse-list" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent"
+             fxLayout="column" fxLayoutAlign="center center"
+             fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0"
+                 fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    camera
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    Horses
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="Search for a horse">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            <!-- BUTTONS -->
+            <div class="mx-32 mx-md-0">
+                <!-- ADD BUTTON -->
+                <button mat-raised-button
+                        [routerLink]="'/horses/new'"
+                        class="add-horse-button fuse-white mt-24 mt-md-0 mr-16">
+                        <mat-icon class="logo-icon s-24 mr-8" [@animate]="{value:'*',params:{delay:'200ms',scale:'0.2'}}">
+                            add_circle_outline
+                        </mat-icon>
+                        <span>Create</span>
+                </button>                
+                <!-- Export CSV BUTTON -->
+                <button mat-raised-button
+                        (click)="exportCSV()"
+                        class="add-horse-button fuse-white mt-24 mt-md-0">
+                        <mat-icon class="logo-icon s-24 mr-8" [@animate]="{value:'*',params:{delay:'200ms',scale:'0.2'}}">
+                            cloud_download
+                        </mat-icon>
+                        <span>Export CSV</span>
+                </button>                
+            </div>
+            <!-- / BUTTONS -->
+
+        </div>
+        <!-- / HEADER -->
+        <!-- SELECTED BAR -->
+        <selected-bar class="accent-600" *ngIf="hasSelectedHorseList" [@slideInTop]></selected-bar>
+        <!-- / SELECTED BAR -->
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <mat-table class="horse-list-table"
+                       #table [dataSource]="dataSource"
+                       matSort
+                       [@animateStagger]="{value:'50'}"
+                       fusePerfectScrollbar>
+                
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="checkbox">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let horse">
+                        <mat-checkbox [(ngModel)]="checkboxes[horse.uid]" (ngModelChange)="onSelectedChange(horse.uid)"
+                                    (click)="$event.stopPropagation()">
+                        </mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+                
+                <!-- Horse Barn Name Column -->
+                <ng-container matColumnDef="barnName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Barn Name</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-xs>
+                        <p>{{horse.barnName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Horse Display Name Column -->
+                <ng-container matColumnDef="displayName">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Display Name</mat-header-cell>
+                    <mat-cell *matCellDef="let horse">
+                        <p>{{horse.displayName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Gender Column -->
+                <ng-container matColumnDef="gender">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Gender</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-xs>
+                        <p>{{horse.gender}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Birth Year Column -->
+                <ng-container matColumnDef="birthYear">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>BirthYear</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-sm>
+                        <p  *ngIf="horse.birthYear!==0">{{horse.birthYear}}</p>
+                    </mat-cell>
+                </ng-container>                
+                <!-- Color Column -->
+                <!-- <ng-container matColumnDef="color">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Color</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-sm>
+                        <p>{{horse.color}}</p>
+                    </mat-cell>
+                </ng-container> -->
+                <!-- Height Column -->
+               <!--  <ng-container matColumnDef="height">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Height</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-sm>
+                        <p  *ngIf="horse.height!==0">{{horse.height}}</p>
+                    </mat-cell>
+                </ng-container> -->
+
+                <!-- Avatar Column -->
+                <ng-container matColumnDef="avatar">
+                    <mat-header-cell *matHeaderCellDef fxLayoutAlign="center center">Avatar</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxLayoutAlign="center center">
+                        <img class="horse-image"
+                            *ngIf="horse.avatarUrl" [alt]="horse.displayName"
+                            [src]="horse.avatarUrl"/>
+                        <img *ngIf="!horse.avatarUrl" class="horse-image-placeholder"
+                            [src]="'assets/icons/horselincs/image-placeholder.png'">
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Leaser Column -->
+                <ng-container matColumnDef="leaserId">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>Leased to</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-md>                        
+                        <a *ngIf="horse.leaser" [routerLink]="'/users/horse-managers/list/'+ horse.leaserId">{{horse.leaser.name}}</a>
+                    </mat-cell>
+                </ng-container>
+                
+                <!-- Trainer Column -->
+                <ng-container matColumnDef="trainerId">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>Trainer</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-md>                        
+                        <a *ngIf="horse.trainer" [routerLink]="'/users/horse-managers/list/'+ horse.trainerId">{{horse.trainer.name}}</a>
+                    </mat-cell>
+                </ng-container>
+                <!-- Creator Column -->
+                <ng-container matColumnDef="creatorId">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Creator</mat-header-cell>
+                    <mat-cell *matCellDef="let horse">                        
+                        <a *ngIf="horse.creator" [routerLink]="'/users/horse-managers/list/'+ horse.creatorId">{{horse.creator.name}}</a>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Deleted Column -->
+                <ng-container matColumnDef="active">
+                    <mat-header-cell *matHeaderCellDef fxHide mat-sort-header fxShow.gt-xl>Active</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-xl>                        
+                            <mat-icon *ngIf="!horse.isDeleted" class="active-icon green-600 s-16">check</mat-icon>
+                            <mat-icon *ngIf="horse.isDeleted" class="active-icon red-500 s-16">close</mat-icon>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Create Date Column -->
+                <ng-container matColumnDef="createdAt">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-md>Create Date</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-md>
+                            <p>{{horse.createdAt | date:"MM/dd/yyyy h:mm a"}}</p> <!-- {{horse.createdAt | date:"MM/dd/yyyy h:mm a"}} -->
+                    </mat-cell>
+                </ng-container>
+                <!-- Detail View Action -->
+                <ng-container matColumnDef="detailAction">
+                    <mat-header-cell *matHeaderCellDef fxHide mat-sort-header fxShow.gt-md>Action</mat-header-cell>
+                    <mat-cell *matCellDef="let horse" fxHide fxShow.gt-md>                        
+                            <button mat-stroked-button color="accent" aria-label="Detail"
+                                [routerLink]="'/horses/list/'+ horse.uid">
+                                <mat-icon class="secondary-text" color="accent">remove_red_eye</mat-icon>
+                                <span> Detail</span>
+                            </button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+                <mat-row *matRowDef="let horse; columns: displayedColumns;"
+                         class="horse"
+                         matRipple
+                         [@animate]="{value:'*',params:{y:'100%'}}"
+                         ><!-- [routerLink]="'/horses/list/'+horse.uid" -->
+                </mat-row>
+
+            </mat-table>
+
+            <mat-paginator #paginator
+                           [length]="dataSource.filteredData.length"
+                           [pageIndex]="0"
+                           [pageSize]="10"
+                           [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons>
+            </mat-paginator>
+
+        </div>
+        <!-- / CONTENT CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

@@ -1,0 +1,60 @@
+<div fxLayout="row" fxLayoutAlign="begin center">
+    <mat-icon class="m-0 mr-16 secondary-text">layers</mat-icon>
+    <div class="h2 secondary-text">Payment Approvers</div>
+</div>
+
+<mat-table #table [dataSource]="dataSource" [@animateStagger]="{value:'50'}">
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+        <mat-cell *matCellDef="let paymentApprover">
+            <p class="text-truncate font-weight-600">{{paymentApprover.creator.name}}</p>
+        </mat-cell>
+    </ng-container>
+    <!-- Amount Column -->
+    <ng-container matColumnDef="amount">
+        <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+        <mat-cell *matCellDef="let paymentApprover">            
+            <span *ngIf="paymentApprover.amount==0" class="status h6 p-4 green-600">Unlimited</span>
+            <span *ngIf="paymentApprover.amount!=0" class="font-weight-600">{{paymentApprover.amount}}</span>
+        </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="edit-buttons">
+        <mat-header-cell *matHeaderCellDef>Edit Actions</mat-header-cell>
+        <mat-cell *matCellDef="let paymentApprover">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();editPaymentApprover(paymentApprover)" color="accent">
+                    <mat-icon aria-label="">edit</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete-buttons">
+        <mat-header-cell *matHeaderCellDef>Delete Actions</mat-header-cell>
+        <mat-cell *matCellDef="let paymentApprover">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();deletePaymentApprover(paymentApprover)" color="warn">
+                    <mat-icon aria-label="">delete</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+    
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>    
+    <mat-row *matRowDef="let paymentApprover; columns: displayedColumns;" (click)="editPaymentApprover(paymentApprover)"
+        matRipple [@animate]="{value:'*',params:{y:'100%'}}">
+    </mat-row>
+</mat-table>
+
+<div fxLayout="row" fxLayoutAlign="end center" class="pr-24 pt-24">
+    <!-- ADD BUTTON -->
+    <button mat-stroked-button color="accent" id="add-payment-approver-button" (click)="newPaymentApprover()"
+        aria-label="add payment approver" [@animate]="{value:'*', params:{delay:'300ms',scale:'.2'}}">
+        Add Payment Approver
+    </button>
+    <!-- / ADD BUTTON -->
+</div>

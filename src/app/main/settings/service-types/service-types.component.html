@@ -1,0 +1,56 @@
+<div fxLayout="row" fxLayoutAlign="begin center">
+    <mat-icon class="m-0 mr-16 secondary-text">layers</mat-icon>
+    <div class="h2 secondary-text">Service Types</div>
+</div>
+
+<mat-table #table [dataSource]="dataSource" [@animateStagger]="{value:'50'}">
+
+    <!-- ServiceType key -->
+    <ng-container matColumnDef="key">
+        <mat-header-cell *matHeaderCellDef>Key</mat-header-cell>
+        <mat-cell *matCellDef="let serviceTypeAdduid">
+            <p class="text-truncate font-weight-600">{{serviceTypeAdduid.serviceType.key}}</p>
+        </mat-cell>
+    </ng-container>
+    <!-- ServiceType Value -->
+    <ng-container matColumnDef="value">
+        <mat-header-cell *matHeaderCellDef>Value</mat-header-cell>
+        <mat-cell *matCellDef="let serviceTypeAdduid">
+            <p class="text-truncate font-weight-600">{{serviceTypeAdduid.serviceType.value}}</p>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="edit-buttons">
+        <mat-header-cell *matHeaderCellDef>Edit Actions</mat-header-cell>
+        <mat-cell *matCellDef="let serviceTypeAdduid">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();editServiceTypes(serviceTypeAdduid)" color="accent">
+                    <mat-icon aria-label="">edit</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete-buttons">
+        <mat-header-cell *matHeaderCellDef>Delete Actions</mat-header-cell>
+        <mat-cell *matCellDef="let serviceTypeAdduid">
+            <div fxFlex="row" fxLayoutAlign="start center">
+                <button mat-icon-button (click)="$event.stopPropagation();deleteServiceTypes(serviceTypeAdduid)" color="warn">
+                    <mat-icon aria-label="">delete</mat-icon>
+                </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let serviceTypeAdduid; columns: displayedColumns;" (click)="editServiceTypes(serviceTypeAdduid)" matRipple [@animate]="{value:'*',params:{y:'100%'}}">
+    </mat-row>
+</mat-table>
+
+<div fxLayout="row" fxLayoutAlign="end center" class="pr-24 pt-24">
+    <!-- ADD BUTTON -->
+    <button mat-stroked-button color="accent" id="add-service-type-button" (click)="newServiceTypes()" aria-label="add payment approver" [@animate]="{value:'*', params:{delay:'300ms',scale:'.2'}}">
+        Add Service
+    </button>
+    <!-- / ADD BUTTON -->
+</div>
